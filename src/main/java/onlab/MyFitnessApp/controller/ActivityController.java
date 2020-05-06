@@ -20,7 +20,7 @@ public class ActivityController {
     }
 
 
-    @GetMapping(produces = "application/json", path = "/{goaltype}")
+    @GetMapping(path = "/{goaltype}")
     public List<Activity> getAllActivitiesByGoaltype(@PathVariable("goaltype") String goaltype)
     {
         return activityService.getActivityByGoal(goaltype);

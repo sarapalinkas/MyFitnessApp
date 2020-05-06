@@ -1,9 +1,7 @@
 package onlab.MyFitnessApp.controller;
 
 import onlab.MyFitnessApp.entity.User;
-import onlab.MyFitnessApp.entity.WorkoutGoal;
 import onlab.MyFitnessApp.service.MyUserDetailsService;
-import onlab.MyFitnessApp.service.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

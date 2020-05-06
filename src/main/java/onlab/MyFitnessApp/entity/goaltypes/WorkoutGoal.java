@@ -1,7 +1,11 @@
-package onlab.MyFitnessApp.entity;
+package onlab.MyFitnessApp.entity.goaltypes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import onlab.MyFitnessApp.entity.Activity;
+import onlab.MyFitnessApp.entity.Goal;
+import onlab.MyFitnessApp.entity.User;
+
 import javax.persistence.*;
 
 import java.util.List;
@@ -11,7 +15,7 @@ import static onlab.MyFitnessApp.service.MyUserDetailsService.currentUser;
 @Entity
 public class WorkoutGoal extends Goal {
 
-    private @Id @GeneratedValue Long id;
+    private @Id Long id;
     private Integer frequency;
 
     @OneToOne
@@ -19,8 +23,6 @@ public class WorkoutGoal extends Goal {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    public List<Activity> activities;
 
     public WorkoutGoal() {
     }
@@ -30,18 +32,9 @@ public class WorkoutGoal extends Goal {
         this.setGoalQuantity(quantity);
         this.frequency = frequency;
         this.user = currentUser;
+        this.id = super.getId();
     }
 
-    public List<Activity> getActivities() {
-        return activities;
-    }
-
-    public void setActivities(List<Activity> activities) {
-        this.activities = activities;
-    }
-    public void addActivity(Activity activity) {
-        this.activities.add(activity);
-    }
 
     public User getUser() {
         return user;
@@ -61,5 +54,14 @@ public class WorkoutGoal extends Goal {
 
     public Long getId() {
         return this.id;
+    }
+
+    public void setId() {
+        this.id = super.getId();
+    }
+
+    @Override
+    public void addActivity(Activity activity) {
+        super.addActivity(activity);
     }
 }

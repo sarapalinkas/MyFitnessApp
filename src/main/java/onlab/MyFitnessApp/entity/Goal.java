@@ -1,6 +1,7 @@
 package onlab.MyFitnessApp.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Inheritance
 @Entity
@@ -10,8 +11,34 @@ public abstract class Goal {
     protected Integer goalQuantity;
     private double percentage;
     private Integer howManyLeft;
-    private int currentWeek;
+    private String currentWeek;
+    private boolean active;
     private Boolean isSucceeded;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    public List<Activity> activities;
+
+    public List<Activity> getActivities() {
+        return activities;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+
+    public void setActivities(List<Activity> activities) {
+        this.activities = activities;
+    }
+
+    public void addActivity(Activity activity) {
+        this.activities.add(activity);
+    }
+
 
     public double getPercentage() {
         return percentage;
@@ -29,11 +56,11 @@ public abstract class Goal {
         this.goalQuantity = goalQuantity;
     }
 
-    public Integer getCurrentWeek() {
+    public String getCurrentWeek() {
         return currentWeek;
     }
 
-    public void setCurrentWeek(Integer currentWeek) {
+    public void setCurrentWeek(String currentWeek) {
         this.currentWeek = currentWeek;
     }
 

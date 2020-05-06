@@ -1,6 +1,7 @@
 package onlab.MyFitnessApp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import onlab.MyFitnessApp.entity.goaltypes.*;
 
 import javax.persistence.*;
 
@@ -14,10 +15,26 @@ public class User {
     private String password;
     private String role;
     private boolean active;
+    int medals;
 
     @OneToOne()
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private WorkoutGoal workoutGoal;
+    @OneToOne()
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private FruitGoal fruitGoal;
+    @OneToOne()
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private VegGoal vegGoal;
+    @OneToOne()
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private SleepGoal sleepGoal;
+    @OneToOne()
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private MeditationGoal meditationGoal;
+    @OneToOne()
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private NatureGoal natureGoal;
 
     public User() {}
 
@@ -30,14 +47,63 @@ public class User {
         this.password = password;
         this.role = "USER";
         this.active=true;
+        this.medals=0;
     }
 
     public WorkoutGoal getWorkoutGoal() {
         return workoutGoal;
     }
 
+    public int getMedals() {
+        return medals;
+    }
+
+    public void setMedals(int medals) {
+        this.medals = medals;
+    }
+
     public void setWorkoutGoal(WorkoutGoal workoutGoal) {
         this.workoutGoal = workoutGoal;
+    }
+
+    public FruitGoal getFruitGoal() {
+        return fruitGoal;
+    }
+
+    public void setFruitGoal(FruitGoal fruitGoal) {
+        this.fruitGoal = fruitGoal;
+    }
+
+    public VegGoal getVegGoal() {
+        return vegGoal;
+    }
+
+    public void setVegGoal(VegGoal vegGoal) {
+        this.vegGoal = vegGoal;
+    }
+
+    public SleepGoal getSleepGoal() {
+        return sleepGoal;
+    }
+
+    public void setSleepGoal(SleepGoal sleepGoal) {
+        this.sleepGoal = sleepGoal;
+    }
+
+    public MeditationGoal getMeditationGoal() {
+        return meditationGoal;
+    }
+
+    public void setMeditationGoal(MeditationGoal meditationGoal) {
+        this.meditationGoal = meditationGoal;
+    }
+
+    public NatureGoal getNatureGoal() {
+        return natureGoal;
+    }
+
+    public void setNatureGoal(NatureGoal natureGoal) {
+        this.natureGoal = natureGoal;
     }
 
     public boolean isActive() {
