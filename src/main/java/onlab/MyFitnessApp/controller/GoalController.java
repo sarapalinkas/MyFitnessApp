@@ -45,7 +45,7 @@ public class GoalController {
         this.vegService = vegService;
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping()
     @RequestMapping({ "/validateLogin" })
     public User validateLogin() {
         int year = Calendar.getInstance().get(Calendar.YEAR);
