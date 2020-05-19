@@ -53,39 +53,33 @@ public class GoalController {
         String currweek = "" + year + week;
         if(currentUser.getWorkoutGoal()!= null && !currentUser.getWorkoutGoal().getCurrentWeek().equals(currweek))
         {
-            WorkoutGoal wg = currentUser.getWorkoutGoal();
-            wg.setActive(false);
-            workoutService.updateWorkoutGoal(wg);
+            workoutService.archiveWorkout();
+            currentUser.setMedals(0);
         }
         if(currentUser.getSleepGoal()!= null && !currentUser.getSleepGoal().getCurrentWeek().equals(currweek))
         {
-            SleepGoal wg = currentUser.getSleepGoal();
-            wg.setActive(false);
-            sleepService.updateSleepGoal(wg);
+            sleepService.archiveSleep();
+            currentUser.setMedals(0);
         }
         if(currentUser.getMeditationGoal()!= null && !currentUser.getMeditationGoal().getCurrentWeek().equals(currweek))
         {
-            MeditationGoal wg = currentUser.getMeditationGoal();
-            wg.setActive(false);
-            meditationService.updateMeditationGoal(wg);
+            meditationService.archiveMeditation();
+            currentUser.setMedals(0);
         }
         if(currentUser.getNatureGoal()!= null && !currentUser.getNatureGoal().getCurrentWeek().equals(currweek))
         {
-            NatureGoal wg = currentUser.getNatureGoal();
-            wg.setActive(false);
-            natureService.updateNatureGoal(wg);
+            natureService.archiveNature();
+            currentUser.setMedals(0);
         }
         if(currentUser.getFruitGoal()!= null && !currentUser.getFruitGoal().getCurrentWeek().equals(currweek))
         {
-            FruitGoal wg = currentUser.getFruitGoal();
-            wg.setActive(false);
-            fruitService.updateFruitGoal(wg);
+            fruitService.archiveFruit();
+            currentUser.setMedals(0);
         }
         if(currentUser.getVegGoal()!= null && !currentUser.getVegGoal().getCurrentWeek().equals(currweek))
         {
-            VegGoal wg = currentUser.getVegGoal();
-            wg.setActive(false);
-            vegService.updateVegGoal(wg);
+            vegService.archiveVegetable();
+            currentUser.setMedals(0);
         }
         return new User("User successfully authenticated");
     }

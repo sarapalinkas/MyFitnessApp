@@ -82,7 +82,9 @@ public class ActivityService {
         Date trialTime = new Date();
         calendar.setTime(trialTime);
         activity.setCurrentWeek(calendar.get(Calendar.WEEK_OF_YEAR));
-        if(activity.getGoalType().equals("Workout"))
+        int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        if(activity.getGoalType().equals("Workout") && currentUser.getWorkoutGoal()!= null &&
+                currentUser.getWorkoutGoal().getHowManyLeft()!=0)
         {
             WorkoutGoal workoutGoal = workoutService.getWorkoutGoal();
             activity.setGoal(workoutGoal);
@@ -90,16 +92,8 @@ public class ActivityService {
             workoutGoal.addActivity(activity);
             workoutService.updateWorkoutGoal(workoutGoal);
         }
-        if(activity.getGoalType().equals("Sleep"))
-        {
-            Long wgid = currentUser.getSleepGoal() .getId();
-            SleepGoal sleepGoal = sleepRepository.myFindById(wgid);
-            activity.setGoal(sleepGoal);
-            activityRepository.save(activity);
-            sleepGoal.addActivity(activity);
-            sleepService.updateSleepGoal(sleepGoal);
-        }
-        if(activity.getGoalType().equals("Meditation"))
+        if(activity.getGoalType().equals("Meditation") && currentUser.getMeditationGoal() != null &&
+                currentUser.getMeditationGoal().getHowManyLeft()!=0)
         {
             Long wgid = currentUser.getMeditationGoal().getId();
             MeditationGoal meditationGoal = meditationRepository.myFindById(wgid);
@@ -108,7 +102,8 @@ public class ActivityService {
             meditationGoal.addActivity(activity);
             meditationService.updateMeditationGoal(meditationGoal);
         }
-        if(activity.getGoalType().equals("Nature"))
+        if(activity.getGoalType().equals("Nature") && currentUser.getNatureGoal() != null &&
+                currentUser.getNatureGoal().getHowManyLeft()!=0)
         {
             Long wgid = currentUser.getNatureGoal().getId();
             NatureGoal natureGoal = natureRepository.myFindById(wgid);
@@ -117,24 +112,34 @@ public class ActivityService {
             natureGoal.addActivity(activity);
             natureService.updateNatureGoal(natureGoal);
         }
-        if(activity.getGoalType().equals("Fruit"))
+        if(activity.getGoalType().equals("Sleep") && currentUser.getSleepGoal() != null &&
+                currentUser.getSleepGoal().getHowManyLeft()!=0)
+        {
+            Long wgid = currentUser.getSleepGoal() .getId();
+            SleepGoal sleepGoal = sleepRepository.myFindById(wgid);
+            activity.setGoal(sleepGoal);
+            activityRepository.save(activity);
+            sleepGoal.addActivity(activity);
+            sleepService.updateSleepGoal(sleepGoal);
+        }
+        if(activity.getGoalType().equals("Fruit") && currentUser.getFruitGoal() != null &&
+                currentUser.getFruitGoal().getHowManyLeft()!=0)
         {
             Long wgid = currentUser.getFruitGoal().getId();
             FruitGoal fruitGoal = fruitRepository.myFindById(wgid);
             activity.setGoal(fruitGoal);
             activityRepository.save(activity);
             fruitGoal.addActivity(activity);
-            fruitGoal.addDay(new Date());
             fruitService.updateFruitGoal(fruitGoal);
         }
-        if(activity.getGoalType().equals("Vegetable"))
+        if(activity.getGoalType().equals("Vegetable") && currentUser.getVegGoal() != null &&
+                currentUser.getVegGoal().getHowManyLeft()!=0)
         {
             Long wgid = currentUser.getVegGoal().getId();
             VegGoal vegGoal = vegRepository.myFindById(wgid);
             activity.setGoal(vegGoal);
             activityRepository.save(activity);
             vegGoal.addActivity(activity);
-            vegGoal.addDay(new Date());
             vegService.updateVegGoal(vegGoal);
         }
     }
@@ -154,6 +159,7 @@ public class ActivityService {
             Long wgid = currentUser.getSleepGoal() .getId();
             SleepGoal sleepGoal = sleepRepository.myFindById(wgid);
             sleepGoal.getActivities().remove(activity);
+            sleepGoal.getAchievedOnDays().remove(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
             sleepService.updateSleepGoal(sleepGoal);
         }
         if(activity.getGoalType().equals("Meditation"))
@@ -175,6 +181,7 @@ public class ActivityService {
             Long wgid = currentUser.getFruitGoal().getId();
             FruitGoal fruitGoal = fruitRepository.myFindById(wgid);
             fruitGoal.getActivities().remove(activity);
+            fruitGoal.getAchievedOnDays().remove(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
             fruitService.updateFruitGoal(fruitGoal);
         }
         if(activity.getGoalType().equals("Vegetable"))
@@ -182,6 +189,7 @@ public class ActivityService {
             Long wgid = currentUser.getWorkoutGoal().getId();
             VegGoal vegGoal = vegRepository.myFindById(wgid);
             vegGoal.getActivities().remove(activity);
+            vegGoal.getAchievedOnDays().remove(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
             vegService.updateVegGoal(vegGoal);
         }
         activityRepository.deleteById(id);

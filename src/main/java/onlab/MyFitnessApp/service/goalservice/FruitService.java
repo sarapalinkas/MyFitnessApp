@@ -1,9 +1,12 @@
 package onlab.MyFitnessApp.service.goalservice;
 
+import onlab.MyFitnessApp.dao.ActivityRepository;
 import onlab.MyFitnessApp.dao.UserRepository;
 import onlab.MyFitnessApp.dao.goaltypes.FruitRepository;
 import onlab.MyFitnessApp.entity.Activity;
 import onlab.MyFitnessApp.entity.goaltypes.FruitGoal;
+import onlab.MyFitnessApp.entity.goaltypes.SleepGoal;
+import onlab.MyFitnessApp.entity.goaltypes.WorkoutGoal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,9 @@ public class FruitService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ActivityRepository activityRepository;
 
     public void addFruitGoal(FruitGoal fruitGoal)
     {
@@ -38,8 +44,9 @@ public class FruitService {
 
     public void updateFruitGoal (FruitGoal fruitGoal)
     {
-        FruitGoal wg = getFruitGoal();
+        FruitGoal wg = fruitRepository.findById(fruitGoal.getId()).get();
         wg.setGoalQuantity(fruitGoal.getGoalQuantity());
+        wg.setActivities(fruitGoal.getActivities());
         int done = 0;
         if(!wg.getActivities().isEmpty())
         {
@@ -49,7 +56,12 @@ public class FruitService {
             }
         }
         wg.setHowManyLeft(wg.getGoalQuantity()- done);
-        wg.setPercentage((7-wg.getAchievedOnDays().size())*100.0/7);
+        if(wg.getHowManyLeft() <= 0)
+        {
+            wg.addDay(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+        }
+        double size = wg.getAchievedOnDays().size();
+        wg.setPercentage((size/7.0)*100.0);
         if(wg.getPercentage() == 100)
         {
             wg.setSucceeded(true);
@@ -63,6 +75,12 @@ public class FruitService {
 
     public void deleteFruitGoal(long id)
     {
+        List<Activity> act = activityRepository.findByGoal("Fruit", currentUser.getFruitGoal());
+        for(int i = 0; i<act.size(); i++)
+        {
+            activityRepository.delete(act.get(i));
+
+        }
         currentUser.setFruitGoal(null);
         userRepository.save(currentUser);
         fruitRepository.deleteById(id);
@@ -71,9 +89,27 @@ public class FruitService {
     public FruitGoal getFruitGoal() {
         if (currentUser.getFruitGoal() != null)
         {
-            Long wgid = currentUser.getFruitGoal().getId();
-            return fruitRepository.myFindById(wgid);
+            FruitGoal sg = currentUser.getFruitGoal();
+            if(!sg.getAchievedOnDays().contains(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)))
+            {
+                sg.setHowManyLeft(sg.getGoalQuantity());
+            }
+            userRepository.save(currentUser);
+            fruitRepository.save(sg);
+
+            return sg;
         }
         return null;
+    }
+
+    public void archiveFruit()
+    {
+        FruitGoal wg = currentUser.getFruitGoal();
+        wg.setActive(false);
+        updateFruitGoal(wg);
+        currentUser.addPastFruitGoal(wg);
+        currentUser.setFruitGoal(null);
+        userRepository.save(currentUser);
+
     }
 }

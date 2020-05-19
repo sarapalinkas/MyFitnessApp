@@ -9,6 +9,7 @@ import onlab.MyFitnessApp.entity.User;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static onlab.MyFitnessApp.service.MyUserDetailsService.currentUser;
 
@@ -19,10 +20,8 @@ public class VegGoal extends Goal
     @JsonIgnore
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
-
-    @ElementCollection
-    @Temporal(TemporalType.DATE)
-    public List<Date> achievedOnDays;
+    @ElementCollection(fetch = FetchType.EAGER)
+    public Set<Integer> achievedOnDays;
 
 
 
@@ -44,17 +43,15 @@ public class VegGoal extends Goal
         this.user = user;
     }
 
-    public List<Date> getAchievedOnDays() {
+    public Set<Integer> getAchievedOnDays() {
         return achievedOnDays;
     }
 
-    public void setAchievedOnDays(List<Date> achievedOnDays) {
+    public void setAchievedOnDays(Set<Integer> achievedOnDays) {
         this.achievedOnDays = achievedOnDays;
     }
 
-    public void addDay(Date day)
-    {
-        this.achievedOnDays.add(day);
-    }
+    public void addDay(Integer day) { this.achievedOnDays.add(day);}
+
 }
 

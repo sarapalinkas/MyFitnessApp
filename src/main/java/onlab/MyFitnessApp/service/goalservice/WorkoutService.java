@@ -26,7 +26,7 @@ public class WorkoutService {
 
     public void addWorkoutGoal(WorkoutGoal workoutGoal)
     {
-        int year = Calendar.getInstance().get(Calendar.YEAR);
+       int year = Calendar.getInstance().get(Calendar.YEAR);
         int week = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
         String currweek = "" + year + week;
         workoutGoal.setCurrentWeek(currweek);
@@ -44,12 +44,16 @@ public class WorkoutService {
         WorkoutGoal wg = workoutRepository.findById(workoutGoal.getId()).get();
         wg.setFrequency(workoutGoal.getFrequency());
         wg.setGoalQuantity(workoutGoal.getGoalQuantity());
+        wg.setActivities(workoutGoal.getActivities());
         int done = 0;
         if(!wg.getActivities().isEmpty())
         {
             for (int i=0; i<wg.getActivities().size(); i++)
             {
-                done += wg.getActivities().get(i).getQuantity();
+                if(wg.getActivities().get(i).getQuantity() >= wg.getGoalQuantity())
+                {
+                    done++;
+                }
             }
         }
         wg.setHowManyLeft(wg.getFrequency()- done);
@@ -80,5 +84,16 @@ public class WorkoutService {
             return wg;
         }
         return null;
+    }
+
+    public void archiveWorkout()
+    {
+        WorkoutGoal wg = currentUser.getWorkoutGoal();
+        wg.setActive(false);
+        updateWorkoutGoal(wg);
+        currentUser.addPastWorkoutGoal(wg);
+        currentUser.setWorkoutGoal(null);
+        userRepository.save(currentUser);
+
     }
 }

@@ -3,6 +3,7 @@ package onlab.MyFitnessApp.service.goalservice;
 import onlab.MyFitnessApp.dao.UserRepository;
 import onlab.MyFitnessApp.dao.goaltypes.MeditationRepository;
 import onlab.MyFitnessApp.entity.goaltypes.MeditationGoal;
+import onlab.MyFitnessApp.entity.goaltypes.WorkoutGoal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,12 +44,16 @@ public class MeditationService {
         MeditationGoal wg = getMeditationGoal();
         wg.setFrequency(meditationGoal.getFrequency());
         wg.setGoalQuantity(meditationGoal.getGoalQuantity());
+        wg.setActivities(meditationGoal.getActivities());
         int done = 0;
         if(!wg.getActivities().isEmpty())
         {
             for (int i=0; i<wg.getActivities().size(); i++)
             {
-                done += wg.getActivities().get(i).getQuantity();
+                if(wg.getActivities().get(i).getQuantity() >= wg.getGoalQuantity())
+                {
+                    done++;
+                }
             }
         }
         wg.setHowManyLeft(wg.getFrequency()- done);
@@ -78,5 +83,15 @@ public class MeditationService {
             return meditationRepository.myFindById(wgid);
         }
         return null;
+    }
+    public void archiveMeditation()
+    {
+        MeditationGoal wg = currentUser.getMeditationGoal();
+        wg.setActive(false);
+        updateMeditationGoal(wg);
+        currentUser.addPastMeditationGoal(wg);
+        currentUser.setMeditationGoal(null);
+        userRepository.save(currentUser);
+
     }
 }

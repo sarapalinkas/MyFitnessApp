@@ -11,4 +11,5 @@ public interface ActivityRepository extends CrudRepository<Activity, Long> {
 
     @Query("SELECT activity FROM Activity activity WHERE activity.goalType= ?1 AND activity.goal = ?2")
     List<Activity> findByGoal(String goaltype, Goal goal);
+
 }

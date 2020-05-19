@@ -3,6 +3,7 @@ package onlab.MyFitnessApp.service.goalservice;
 import onlab.MyFitnessApp.dao.UserRepository;
 import onlab.MyFitnessApp.dao.goaltypes.NatureRepository;
 import onlab.MyFitnessApp.entity.goaltypes.NatureGoal;
+import onlab.MyFitnessApp.entity.goaltypes.WorkoutGoal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class NatureService {
 
     public void addNatureGoal(NatureGoal natureGoal)
     {
-        int year = Calendar.getInstance().get(Calendar.YEAR);
+       int year = Calendar.getInstance().get(Calendar.YEAR);
         int week = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
         String currweek = "" + year + week;
         natureGoal.setCurrentWeek(currweek);
@@ -42,12 +43,16 @@ public class NatureService {
         NatureGoal wg = getNatureGoal();
         wg.setFrequency(natureGoal.getFrequency());
         wg.setGoalQuantity(natureGoal.getGoalQuantity());
+        wg.setActivities(natureGoal.getActivities());
         int done = 0;
         if(!wg.getActivities().isEmpty())
         {
             for (int i=0; i<wg.getActivities().size(); i++)
             {
-                done += wg.getActivities().get(i).getQuantity();
+                if(wg.getActivities().get(i).getQuantity() >= wg.getGoalQuantity())
+                {
+                    done++;
+                }
             }
         }
         wg.setHowManyLeft(wg.getFrequency()- done);
@@ -77,5 +82,16 @@ public class NatureService {
             return natureRepository.myFindById(wgid);
         }
         return null;
+    }
+
+    public void archiveNature()
+    {
+        NatureGoal wg = currentUser.getNatureGoal();
+        wg.setActive(false);
+        updateNatureGoal(wg);
+        currentUser.addPastNatureGoal(wg);
+        currentUser.setNatureGoal(null);
+        userRepository.save(currentUser);
+
     }
 }

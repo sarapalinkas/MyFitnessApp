@@ -1,8 +1,12 @@
 package onlab.MyFitnessApp.service.goalservice;
 
+import onlab.MyFitnessApp.dao.ActivityRepository;
 import onlab.MyFitnessApp.dao.UserRepository;
 import onlab.MyFitnessApp.dao.goaltypes.VegRepository;
+import onlab.MyFitnessApp.entity.Activity;
+import onlab.MyFitnessApp.entity.goaltypes.SleepGoal;
 import onlab.MyFitnessApp.entity.goaltypes.VegGoal;
+import onlab.MyFitnessApp.entity.goaltypes.WorkoutGoal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +14,7 @@ import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import static onlab.MyFitnessApp.service.MyUserDetailsService.currentUser;
 
@@ -22,11 +27,14 @@ public class VegService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ActivityRepository activityRepository;
+
     public void addVegGoal(VegGoal vegGoal)
     {
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        int week = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
-        String currweek = "" + year + week;
+       int year = Calendar.getInstance().get(Calendar.YEAR);
+       int week = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+       String currweek = "" + year + week;
         vegGoal.setCurrentWeek(currweek);
         vegGoal.setActive(true);
         vegGoal.setUser(currentUser);
@@ -39,8 +47,9 @@ public class VegService {
 
     public void updateVegGoal (VegGoal vegGoal)
     {
-        VegGoal wg = getVegGoal();
+        VegGoal wg = vegRepository.findById(vegGoal.getId()).get();
         wg.setGoalQuantity(vegGoal.getGoalQuantity());
+        wg.setAchievedOnDays(vegGoal.getAchievedOnDays());
         int done = 0;
         if(!wg.getActivities().isEmpty())
         {
@@ -50,7 +59,12 @@ public class VegService {
             }
         }
         wg.setHowManyLeft(wg.getGoalQuantity()- done);
-        wg.setPercentage((7-wg.getAchievedOnDays().size())*100.0/7);
+        if(wg.getHowManyLeft() <= 0)
+        {
+            wg.addDay(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+        }
+        double size = wg.getAchievedOnDays().size();
+        wg.setPercentage((size/7.0)*100.0);
         if(wg.getPercentage() == 100)
         {
             wg.setSucceeded(true);
@@ -64,17 +78,42 @@ public class VegService {
 
     public void deleteVegGoal(long id)
     {
+        List<Activity> act = activityRepository.findByGoal("Vegetable", currentUser.getVegGoal());
+        for(int i = 0; i<act.size(); i++)
+        {
+            activityRepository.delete(act.get(i));
+
+        }
         currentUser.setVegGoal(null);
         userRepository.save(currentUser);
         vegRepository.deleteById(id);
+
     }
 
     public VegGoal getVegGoal() {
         if (currentUser.getVegGoal() != null)
         {
-            Long wgid = currentUser.getVegGoal().getId();
-            return vegRepository.myFindById(wgid);
+            VegGoal sg = currentUser.getVegGoal();
+            if(!sg.getAchievedOnDays().contains(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)))
+            {
+                sg.setHowManyLeft(sg.getGoalQuantity());
+            }
+            userRepository.save(currentUser);
+            vegRepository.save(sg);
+
+            return sg;
         }
         return null;
+    }
+
+    public void archiveVegetable()
+    {
+        VegGoal wg = currentUser.getVegGoal();
+        wg.setActive(false);
+        updateVegGoal(wg);
+        currentUser.addPastVegGoal(wg);
+        currentUser.setVegGoal(null);
+        userRepository.save(currentUser);
+
     }
 }
