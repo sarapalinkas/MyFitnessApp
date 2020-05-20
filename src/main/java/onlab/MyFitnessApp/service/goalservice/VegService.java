@@ -41,13 +41,14 @@ public class VegService {
         vegGoal.setHowManyLeft(vegGoal.getGoalQuantity());
         vegGoal.setSucceeded(false);
         vegGoal.setPercentage(0);
+        vegGoal.setDaycount(0);
         currentUser.setVegGoal(vegRepository.save(vegGoal));
         userRepository.save(currentUser);
     }
 
     public void updateVegGoal (VegGoal vegGoal)
     {
-        VegGoal wg = vegRepository.findById(vegGoal.getId()).get();
+        VegGoal wg = currentUser.getVegGoal();
         wg.setGoalQuantity(vegGoal.getGoalQuantity());
         wg.setAchievedOnDays(vegGoal.getAchievedOnDays());
         int done = 0;
@@ -55,15 +56,19 @@ public class VegService {
         {
             for (int i=0; i<wg.getActivities().size(); i++)
             {
-                done += wg.getActivities().get(i).getQuantity();
+                if(wg.getActivities().get(i).getDay() == Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
+                {
+                    done += wg.getActivities().get(i).getQuantity();
+                    wg.addDay(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+                }
             }
         }
         wg.setHowManyLeft(wg.getGoalQuantity()- done);
         if(wg.getHowManyLeft() <= 0)
         {
-            wg.addDay(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+            wg.setDaycount(wg.getDaycount()+1);
         }
-        double size = wg.getAchievedOnDays().size();
+        double size = wg.getDaycount();
         wg.setPercentage((size/7.0)*100.0);
         if(wg.getPercentage() == 100)
         {

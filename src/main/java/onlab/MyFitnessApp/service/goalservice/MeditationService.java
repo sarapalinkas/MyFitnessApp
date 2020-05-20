@@ -41,7 +41,7 @@ public class MeditationService {
 
     public void updateMeditationGoal (MeditationGoal meditationGoal)
     {
-        MeditationGoal wg = getMeditationGoal();
+        MeditationGoal wg = currentUser.getMeditationGoal();
         wg.setFrequency(meditationGoal.getFrequency());
         wg.setGoalQuantity(meditationGoal.getGoalQuantity());
         wg.setActivities(meditationGoal.getActivities());
@@ -79,8 +79,7 @@ public class MeditationService {
     public MeditationGoal getMeditationGoal() {
         if (currentUser.getMeditationGoal() != null)
         {
-            Long wgid = currentUser.getMeditationGoal().getId();
-            return meditationRepository.myFindById(wgid);
+            return currentUser.getMeditationGoal();
         }
         return null;
     }

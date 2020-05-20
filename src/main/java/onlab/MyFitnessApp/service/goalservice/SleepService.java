@@ -40,13 +40,14 @@ public class SleepService {
         sleepGoal.setHowManyLeft(sleepGoal.getGoalQuantity());
         sleepGoal.setSucceeded(false);
         sleepGoal.setPercentage(0);
+        sleepGoal.setDaycount(0);
         currentUser.setSleepGoal(sleepRepository.save(sleepGoal));
         userRepository.save(currentUser);
     }
 
     public void updateSleepGoal (SleepGoal sleepGoal)
     {
-        SleepGoal wg = sleepRepository.findById(sleepGoal.getId()).get();
+        SleepGoal wg = currentUser.getSleepGoal();
         wg.setGoalQuantity(sleepGoal.getGoalQuantity());
         wg.setActivities(sleepGoal.getActivities());
         int done = 0;
@@ -54,15 +55,19 @@ public class SleepService {
         {
             for (int i=0; i<wg.getActivities().size(); i++)
             {
-                done += wg.getActivities().get(i).getQuantity();
+                if(wg.getActivities().get(i).getDay() == Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
+                {
+                    done += wg.getActivities().get(i).getQuantity();
+                    wg.addDay(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+                }
             }
         }
         wg.setHowManyLeft(wg.getGoalQuantity()- done);
         if(wg.getHowManyLeft() <= 0)
         {
-            wg.addDay(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+            wg.setDaycount(wg.getDaycount()+1);
         }
-        double size = wg.getAchievedOnDays().size();
+        double size = wg.getDaycount();
         wg.setPercentage((size/7.0)*100.0);
         if(wg.getPercentage() == 100)
         {

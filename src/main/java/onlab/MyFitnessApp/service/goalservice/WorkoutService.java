@@ -41,7 +41,7 @@ public class WorkoutService {
 
     public void updateWorkoutGoal (WorkoutGoal workoutGoal)
     {
-        WorkoutGoal wg = workoutRepository.findById(workoutGoal.getId()).get();
+        WorkoutGoal wg = currentUser.getWorkoutGoal();
         wg.setFrequency(workoutGoal.getFrequency());
         wg.setGoalQuantity(workoutGoal.getGoalQuantity());
         wg.setActivities(workoutGoal.getActivities());
@@ -79,9 +79,7 @@ public class WorkoutService {
     public WorkoutGoal getWorkoutGoal() {
         if (currentUser.getWorkoutGoal() != null)
         {
-            Long wgid = currentUser.getWorkoutGoal().getId();
-            WorkoutGoal wg = workoutRepository.myFindById(wgid);
-            return wg;
+            return currentUser.getWorkoutGoal();
         }
         return null;
     }

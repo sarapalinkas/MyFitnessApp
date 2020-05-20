@@ -23,6 +23,7 @@ public class SleepGoal extends Goal {
 
     @ElementCollection(fetch = FetchType.EAGER)
     public Set<Integer> achievedOnDays;
+    public Integer daycount;
 
 
     public SleepGoal() {
@@ -54,4 +55,11 @@ public class SleepGoal extends Goal {
 
     public void addDay(Integer day) { this.achievedOnDays.add(day);}
 
+    public Integer getDaycount() {
+        return daycount;
+    }
+
+    public void setDaycount(Integer daycount) {
+        this.daycount = daycount;
+    }
 }

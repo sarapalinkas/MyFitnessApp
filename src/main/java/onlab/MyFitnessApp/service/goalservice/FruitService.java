@@ -38,13 +38,14 @@ public class FruitService {
         fruitGoal.setHowManyLeft(fruitGoal.getGoalQuantity());
         fruitGoal.setSucceeded(false);
         fruitGoal.setPercentage(0);
+        fruitGoal.setDaycount(0);
         currentUser.setFruitGoal(fruitRepository.save(fruitGoal));
         userRepository.save(currentUser);
     }
 
     public void updateFruitGoal (FruitGoal fruitGoal)
     {
-        FruitGoal wg = fruitRepository.findById(fruitGoal.getId()).get();
+        FruitGoal wg = currentUser.getFruitGoal();
         wg.setGoalQuantity(fruitGoal.getGoalQuantity());
         wg.setActivities(fruitGoal.getActivities());
         int done = 0;
@@ -52,15 +53,19 @@ public class FruitService {
         {
             for (int i=0; i<wg.getActivities().size(); i++)
             {
-                done += wg.getActivities().get(i).getQuantity();
+                if(wg.getActivities().get(i).getDay() == Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
+                {
+                    done += wg.getActivities().get(i).getQuantity();
+                    wg.addDay(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+                }
             }
         }
         wg.setHowManyLeft(wg.getGoalQuantity()- done);
         if(wg.getHowManyLeft() <= 0)
         {
-            wg.addDay(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+            wg.setDaycount(wg.getDaycount()+1);
         }
-        double size = wg.getAchievedOnDays().size();
+        double size = wg.getDaycount();
         wg.setPercentage((size/7.0)*100.0);
         if(wg.getPercentage() == 100)
         {

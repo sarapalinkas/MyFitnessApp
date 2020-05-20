@@ -11,7 +11,9 @@ public class Activity {
     private int currentWeek;
     private int quantity;
     private String goalType;
+    private int day;
     @ManyToOne @JsonIgnore @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) private Goal goal;
+    private String time;
 
     public Activity(String goalType, int quantity)
     {
@@ -59,5 +61,21 @@ public class Activity {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

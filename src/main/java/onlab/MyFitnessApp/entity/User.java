@@ -40,17 +40,17 @@ public class User {
     private NatureGoal natureGoal;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private List<WorkoutGoal> pastWorkoutGoals = new ArrayList<>();
+    private Set<WorkoutGoal> pastWorkoutGoals;
     @OneToMany(fetch = FetchType.EAGER)
-    private List<FruitGoal> pastFruitGoals= new ArrayList<>();
+    private Set<FruitGoal> pastFruitGoals;
     @OneToMany(fetch = FetchType.EAGER)
-    private List<VegGoal> pastVegGoals= new ArrayList<>();
+    private Set<VegGoal> pastVegGoals;
     @OneToMany(fetch = FetchType.EAGER)
-    private List<SleepGoal> pastSleepGoals= new ArrayList<>();
+    private Set<SleepGoal> pastSleepGoals;
     @OneToMany(fetch = FetchType.EAGER)
-    private List<MeditationGoal> pastMeditationGoals= new ArrayList<>();
+    private Set<MeditationGoal> pastMeditationGoals;
     @OneToMany(fetch = FetchType.EAGER)
-    private List<NatureGoal> pastNatureGoals= new ArrayList<>();
+    private Set<NatureGoal> pastNatureGoals;
 
     public User() {}
 
@@ -192,51 +192,51 @@ public class User {
         pastMeditationGoals.add(goal);
     }
 
-    public List<WorkoutGoal> getPastWorkoutGoals() {
+    public Set<WorkoutGoal> getPastWorkoutGoals() {
         return pastWorkoutGoals;
     }
 
-    public void setPastWorkoutGoals(List<WorkoutGoal> pastWorkoutGoals) {
+    public void setPastWorkoutGoals(Set<WorkoutGoal> pastWorkoutGoals) {
         this.pastWorkoutGoals = pastWorkoutGoals;
     }
 
-    public List<FruitGoal> getPastFruitGoals() {
+    public Set<FruitGoal> getPastFruitGoals() {
         return pastFruitGoals;
     }
 
-    public void setPastFruitGoals(List<FruitGoal> pastFruitGoals) {
+    public void setPastFruitGoals(Set<FruitGoal> pastFruitGoals) {
         this.pastFruitGoals = pastFruitGoals;
     }
 
-    public List<VegGoal> getPastVegGoals() {
+    public Set<VegGoal> getPastVegGoals() {
         return pastVegGoals;
     }
 
-    public void setPastVegGoals(List<VegGoal> pastVegGoals) {
+    public void setPastVegGoals(Set<VegGoal> pastVegGoals) {
         this.pastVegGoals = pastVegGoals;
     }
 
-    public List<SleepGoal> getPastSleepGoals() {
+    public Set<SleepGoal> getPastSleepGoals() {
         return pastSleepGoals;
     }
 
-    public void setPastSleepGoals(List<SleepGoal> pastSleepGoals) {
+    public void setPastSleepGoals(Set<SleepGoal> pastSleepGoals) {
         this.pastSleepGoals = pastSleepGoals;
     }
 
-    public List<MeditationGoal> getPastMeditationGoals() {
+    public Set<MeditationGoal> getPastMeditationGoals() {
         return pastMeditationGoals;
     }
 
-    public void setPastMeditationGoals(List<MeditationGoal> pastMeditationGoals) {
+    public void setPastMeditationGoals(Set<MeditationGoal> pastMeditationGoals) {
         this.pastMeditationGoals = pastMeditationGoals;
     }
 
-    public List<NatureGoal> getPastNatureGoals() {
+    public Set<NatureGoal> getPastNatureGoals() {
         return pastNatureGoals;
     }
 
-    public void setPastNatureGoals(List<NatureGoal> pastNatureGoals) {
+    public void setPastNatureGoals(Set<NatureGoal> pastNatureGoals) {
         this.pastNatureGoals = pastNatureGoals;
     }
 }

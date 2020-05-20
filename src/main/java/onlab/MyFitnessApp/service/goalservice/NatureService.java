@@ -40,7 +40,7 @@ public class NatureService {
 
     public void updateNatureGoal (NatureGoal natureGoal)
     {
-        NatureGoal wg = getNatureGoal();
+        NatureGoal wg = currentUser.getNatureGoal();
         wg.setFrequency(natureGoal.getFrequency());
         wg.setGoalQuantity(natureGoal.getGoalQuantity());
         wg.setActivities(natureGoal.getActivities());
@@ -78,8 +78,7 @@ public class NatureService {
     public NatureGoal getNatureGoal() {
         if (currentUser.getNatureGoal() != null)
         {
-            Long wgid = currentUser.getNatureGoal().getId();
-            return natureRepository.myFindById(wgid);
+            return currentUser.getNatureGoal();
         }
         return null;
     }

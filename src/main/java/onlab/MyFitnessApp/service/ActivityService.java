@@ -83,10 +83,11 @@ public class ActivityService {
         calendar.setTime(trialTime);
         activity.setCurrentWeek(calendar.get(Calendar.WEEK_OF_YEAR));
         int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        activity.setDay(today);
         if(activity.getGoalType().equals("Workout") && currentUser.getWorkoutGoal()!= null &&
                 currentUser.getWorkoutGoal().getHowManyLeft()!=0)
         {
-            WorkoutGoal workoutGoal = workoutService.getWorkoutGoal();
+            WorkoutGoal workoutGoal = currentUser.getWorkoutGoal();
             activity.setGoal(workoutGoal);
             activityRepository.save(activity);
             workoutGoal.addActivity(activity);
@@ -95,8 +96,7 @@ public class ActivityService {
         if(activity.getGoalType().equals("Meditation") && currentUser.getMeditationGoal() != null &&
                 currentUser.getMeditationGoal().getHowManyLeft()!=0)
         {
-            Long wgid = currentUser.getMeditationGoal().getId();
-            MeditationGoal meditationGoal = meditationRepository.myFindById(wgid);
+            MeditationGoal meditationGoal = currentUser.getMeditationGoal();
             activity.setGoal(meditationGoal);
             activityRepository.save(activity);
             meditationGoal.addActivity(activity);
@@ -105,8 +105,7 @@ public class ActivityService {
         if(activity.getGoalType().equals("Nature") && currentUser.getNatureGoal() != null &&
                 currentUser.getNatureGoal().getHowManyLeft()!=0)
         {
-            Long wgid = currentUser.getNatureGoal().getId();
-            NatureGoal natureGoal = natureRepository.myFindById(wgid);
+            NatureGoal natureGoal = currentUser.getNatureGoal();
             activity.setGoal(natureGoal);
             activityRepository.save(activity);
             natureGoal.addActivity(activity);
@@ -115,8 +114,7 @@ public class ActivityService {
         if(activity.getGoalType().equals("Sleep") && currentUser.getSleepGoal() != null &&
                 currentUser.getSleepGoal().getHowManyLeft()!=0)
         {
-            Long wgid = currentUser.getSleepGoal() .getId();
-            SleepGoal sleepGoal = sleepRepository.myFindById(wgid);
+            SleepGoal sleepGoal = currentUser.getSleepGoal();
             activity.setGoal(sleepGoal);
             activityRepository.save(activity);
             sleepGoal.addActivity(activity);
@@ -125,8 +123,7 @@ public class ActivityService {
         if(activity.getGoalType().equals("Fruit") && currentUser.getFruitGoal() != null &&
                 currentUser.getFruitGoal().getHowManyLeft()!=0)
         {
-            Long wgid = currentUser.getFruitGoal().getId();
-            FruitGoal fruitGoal = fruitRepository.myFindById(wgid);
+            FruitGoal fruitGoal = currentUser.getFruitGoal();
             activity.setGoal(fruitGoal);
             activityRepository.save(activity);
             fruitGoal.addActivity(activity);
@@ -135,8 +132,7 @@ public class ActivityService {
         if(activity.getGoalType().equals("Vegetable") && currentUser.getVegGoal() != null &&
                 currentUser.getVegGoal().getHowManyLeft()!=0)
         {
-            Long wgid = currentUser.getVegGoal().getId();
-            VegGoal vegGoal = vegRepository.myFindById(wgid);
+            VegGoal vegGoal = currentUser.getVegGoal();
             activity.setGoal(vegGoal);
             activityRepository.save(activity);
             vegGoal.addActivity(activity);
@@ -149,47 +145,53 @@ public class ActivityService {
         Activity activity = activityRepository.findById(id).get();
         if(activity.getGoalType().equals("Workout"))
         {
-            Long wgid = currentUser.getWorkoutGoal().getId();
-            WorkoutGoal workoutGoal = workoutRepository.findById(wgid).get();
-            workoutGoal.getActivities().remove(activity);
+            WorkoutGoal workoutGoal = currentUser.getWorkoutGoal();
+            workoutGoal.getActivities().remove(id);
             workoutService.updateWorkoutGoal(workoutGoal);
         }
         if(activity.getGoalType().equals("Sleep"))
         {
-            Long wgid = currentUser.getSleepGoal() .getId();
-            SleepGoal sleepGoal = sleepRepository.myFindById(wgid);
-            sleepGoal.getActivities().remove(activity);
+            SleepGoal sleepGoal = currentUser.getSleepGoal();
+            sleepGoal.getActivities().remove(id);
             sleepGoal.getAchievedOnDays().remove(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+            sleepGoal.setDaycount(sleepGoal.getDaycount() -1);
             sleepService.updateSleepGoal(sleepGoal);
         }
         if(activity.getGoalType().equals("Meditation"))
         {
-            Long wgid = currentUser.getMeditationGoal().getId();
-            MeditationGoal meditationGoal = meditationRepository.myFindById(wgid);
-            meditationGoal.getActivities().remove(activity);
+            MeditationGoal meditationGoal = currentUser.getMeditationGoal();
+            meditationGoal.getActivities().remove(id);
             meditationService.updateMeditationGoal(meditationGoal);
         }
         if(activity.getGoalType().equals("Nature"))
         {
-            Long wgid = currentUser.getNatureGoal().getId();
-            NatureGoal natureGoal = natureRepository.myFindById(wgid);
-            natureGoal.getActivities().remove(activity);
+            NatureGoal natureGoal = currentUser.getNatureGoal();
+            for(int i = 0; i<natureGoal.getActivities().size(); i++)
+            {
+                if(id == natureGoal.getActivities().get(i).getId())
+                {
+                    natureGoal.getActivities().remove(natureGoal.getActivities().get(i));
+                }
+            }
+                    //  natureGoal.getActivities().remove(activity);
+          //  natureGoal.getActivities().remove(Math.toIntExact(id));
+            activityRepository.deleteById(id);
             natureService.updateNatureGoal(natureGoal);
         }
         if(activity.getGoalType().equals("Fruit"))
         {
-            Long wgid = currentUser.getFruitGoal().getId();
-            FruitGoal fruitGoal = fruitRepository.myFindById(wgid);
-            fruitGoal.getActivities().remove(activity);
+            FruitGoal fruitGoal = currentUser.getFruitGoal();
+            fruitGoal.getActivities().remove(id);
             fruitGoal.getAchievedOnDays().remove(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+            fruitGoal.setDaycount(fruitGoal.getDaycount() -1);
             fruitService.updateFruitGoal(fruitGoal);
         }
         if(activity.getGoalType().equals("Vegetable"))
         {
-            Long wgid = currentUser.getWorkoutGoal().getId();
-            VegGoal vegGoal = vegRepository.myFindById(wgid);
-            vegGoal.getActivities().remove(activity);
+            VegGoal vegGoal = currentUser.getVegGoal();
+            vegGoal.getActivities().remove(id);
             vegGoal.getAchievedOnDays().remove(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+            vegGoal.setDaycount(vegGoal.getDaycount() -1);
             vegService.updateVegGoal(vegGoal);
         }
         activityRepository.deleteById(id);

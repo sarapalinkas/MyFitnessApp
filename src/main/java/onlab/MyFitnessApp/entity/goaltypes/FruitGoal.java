@@ -24,6 +24,8 @@ public class FruitGoal extends Goal {
     @ElementCollection(fetch = FetchType.EAGER)
     public Set<Integer> achievedOnDays;
 
+    public Integer daycount;
+
     public FruitGoal() {
     }
 
@@ -51,4 +53,12 @@ public class FruitGoal extends Goal {
 
     public void addDay(Integer day) { this.achievedOnDays.add(day);}
 
+    @JsonIgnore
+    public int getDaycount() {
+        return daycount;
+    }
+
+    public void setDaycount(int daycount) {
+        this.daycount = daycount;
+    }
 }

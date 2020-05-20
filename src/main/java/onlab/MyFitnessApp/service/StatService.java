@@ -14,23 +14,23 @@ import static onlab.MyFitnessApp.service.MyUserDetailsService.currentUser;
 @Service
 public class StatService {
 
-    public List<WorkoutGoal> getPastWorkoutGoals(){
+    public Set<WorkoutGoal> getPastWorkoutGoals(){
         return currentUser.getPastWorkoutGoals();
     }
 
-    public List<SleepGoal> getPastSleepGoals(){
+    public Set<SleepGoal> getPastSleepGoals(){
         return currentUser.getPastSleepGoals();
     }
-    public List<FruitGoal> getPastFruitGoals(){
+    public Set<FruitGoal> getPastFruitGoals(){
         return currentUser.getPastFruitGoals();
     }
-    public List<VegGoal> getPastVegGoals(){
+    public Set<VegGoal> getPastVegGoals(){
         return currentUser.getPastVegGoals();
     }
-    public List<MeditationGoal> getPastMeditationGoals(){
+    public Set<MeditationGoal> getPastMeditationGoals(){
         return currentUser.getPastMeditationGoals();
     }
-    public List<NatureGoal> getPastNatureGoals(){
+    public Set<NatureGoal> getPastNatureGoals(){
         return currentUser.getPastNatureGoals();
     }
 

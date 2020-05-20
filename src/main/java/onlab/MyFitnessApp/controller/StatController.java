@@ -24,33 +24,33 @@ public class StatController {
     }
 
     @GetMapping(path = "/workoutgoal")
-    public List<WorkoutGoal> getPastWorkoutGoals()
+    public Set<WorkoutGoal> getPastWorkoutGoals()
     {
         return statService.getPastWorkoutGoals();
     }
 
     @GetMapping(path = "/sleepgoal")
-    public List<SleepGoal> getPastSleepGoals()
+    public Set<SleepGoal> getPastSleepGoals()
     {
         return statService.getPastSleepGoals();
     }
     @GetMapping(path = "/fruitgoal")
-    public List<FruitGoal> getPastFruitGoals()
+    public Set<FruitGoal> getPastFruitGoals()
     {
         return statService.getPastFruitGoals();
     }
     @GetMapping(path = "/veggoal")
-    public List<VegGoal> getPastVegGoals()
+    public Set<VegGoal> getPastVegGoals()
     {
         return statService.getPastVegGoals();
     }
     @GetMapping(path = "/meditationgoal")
-    public List<MeditationGoal> getPastMeditationGoals()
+    public Set<MeditationGoal> getPastMeditationGoals()
     {
         return statService.getPastMeditationGoals();
     }
     @GetMapping(path = "/naturegoal")
-    public List<NatureGoal> getPastNatureGoals()
+    public Set<NatureGoal> getPastNatureGoals()
     {
         return statService.getPastNatureGoals();
     }

@@ -139,16 +139,28 @@ public class GoalController {
     }
 
     @PutMapping(value="/workoutgoal")
-    public void updateWorkoutGoal(@RequestBody WorkoutGoal workoutGoal) {workoutService.updateWorkoutGoal(workoutGoal);}
+    public void updateWorkoutGoal(@RequestBody WorkoutGoal workoutGoal) {
+        workoutGoal.setActivities(currentUser.getWorkoutGoal().getActivities());
+        workoutService.updateWorkoutGoal(workoutGoal);}
     @PutMapping(value="/sleepgoal")
-    public void updateSleepgoal(@RequestBody SleepGoal sleepGoal) {sleepService.updateSleepGoal(sleepGoal);}
+    public void updateSleepgoal(@RequestBody SleepGoal sleepGoal) {
+        sleepGoal.setActivities(currentUser.getSleepGoal().getActivities());
+        sleepService.updateSleepGoal(sleepGoal);}
     @PutMapping(value="/meditationgoal")
-    public void updateMeditationgoal(@RequestBody MeditationGoal meditationGoal) {meditationService.updateMeditationGoal(meditationGoal);}
+    public void updateMeditationgoal(@RequestBody MeditationGoal meditationGoal) {
+        meditationGoal.setActivities(currentUser.getMeditationGoal().getActivities());
+        meditationService.updateMeditationGoal(meditationGoal);}
     @PutMapping(value="/naturegoal")
-    public void updateNaturegoal(@RequestBody NatureGoal natureGoal) {natureService.updateNatureGoal(natureGoal);}
+    public void updateNaturegoal(@RequestBody NatureGoal natureGoal) {
+        natureGoal.setActivities(currentUser.getNatureGoal().getActivities());
+        natureService.updateNatureGoal(natureGoal);}
     @PutMapping(value="/fruitgoal")
-    public void updateFruitgoal(@RequestBody FruitGoal fruitGoal) {fruitService.updateFruitGoal(fruitGoal);}
+    public void updateFruitgoal(@RequestBody FruitGoal fruitGoal) {
+        fruitGoal.setActivities(currentUser.getFruitGoal().getActivities());
+        fruitService.updateFruitGoal(fruitGoal);}
     @PutMapping(value="/veggoal")
-    public void updateVeggoal(@RequestBody VegGoal vegGoal) {vegService.updateVegGoal(vegGoal);}
+    public void updateVeggoal(@RequestBody VegGoal vegGoal) {
+        vegGoal.setActivities(currentUser.getVegGoal().getActivities());
+        vegService.updateVegGoal(vegGoal);}
 
 }

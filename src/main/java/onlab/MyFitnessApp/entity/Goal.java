@@ -1,6 +1,7 @@
 package onlab.MyFitnessApp.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Inheritance
@@ -16,7 +17,7 @@ public abstract class Goal {
     private Boolean isSucceeded;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    public List<Activity> activities;
+    public List<Activity> activities = new ArrayList<>();
 
     public List<Activity> getActivities() {
         return activities;
