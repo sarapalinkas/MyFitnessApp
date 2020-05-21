@@ -42,7 +42,8 @@ public class VegService {
         vegGoal.setSucceeded(false);
         vegGoal.setPercentage(0);
         vegGoal.setDaycount(0);
-        currentUser.setVegGoal(vegRepository.save(vegGoal));
+        vegRepository.save(vegGoal);
+        currentUser.setVegGoal(vegGoal);
         userRepository.save(currentUser);
     }
 
@@ -51,6 +52,7 @@ public class VegService {
         VegGoal wg = currentUser.getVegGoal();
         wg.setGoalQuantity(vegGoal.getGoalQuantity());
         wg.setAchievedOnDays(vegGoal.getAchievedOnDays());
+        wg.setActivities(vegGoal.getActivities());
         int done = 0;
         if(!wg.getActivities().isEmpty())
         {
@@ -83,7 +85,8 @@ public class VegService {
 
     public void deleteVegGoal(long id)
     {
-        List<Activity> act = activityRepository.findByGoal("Vegetable", currentUser.getVegGoal());
+        List<Activity> act = activityRepository.findByGoal("Vegetable", currentUser.getVegGoal(),
+                Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
         for(int i = 0; i<act.size(); i++)
         {
             activityRepository.delete(act.get(i));

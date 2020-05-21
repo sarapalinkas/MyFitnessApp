@@ -7,10 +7,7 @@ import onlab.MyFitnessApp.entity.Goal;
 import onlab.MyFitnessApp.entity.User;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static onlab.MyFitnessApp.service.MyUserDetailsService.currentUser;
 
@@ -22,7 +19,7 @@ public class FruitGoal extends Goal {
     private User user;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    public Set<Integer> achievedOnDays;
+    public Set<Integer> achievedOnDays = new HashSet<>();
 
     public Integer daycount;
 

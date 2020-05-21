@@ -1,7 +1,9 @@
 package onlab.MyFitnessApp.service.goalservice;
 
+import onlab.MyFitnessApp.dao.ActivityRepository;
 import onlab.MyFitnessApp.dao.UserRepository;
 import onlab.MyFitnessApp.dao.goaltypes.MeditationRepository;
+import onlab.MyFitnessApp.entity.Activity;
 import onlab.MyFitnessApp.entity.goaltypes.MeditationGoal;
 import onlab.MyFitnessApp.entity.goaltypes.WorkoutGoal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import static onlab.MyFitnessApp.service.MyUserDetailsService.currentUser;
 
@@ -23,6 +26,8 @@ public class MeditationService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ActivityRepository activityRepository;
 
     public void addMeditationGoal(MeditationGoal meditationGoal)
     {
@@ -35,7 +40,8 @@ public class MeditationService {
         meditationGoal.setHowManyLeft(meditationGoal.getFrequency());
         meditationGoal.setSucceeded(false);
         meditationGoal.setPercentage(0);
-        currentUser.setMeditationGoal(meditationRepository.save(meditationGoal));
+        meditationRepository.save(meditationGoal);
+        currentUser.setMeditationGoal(meditationGoal);
         userRepository.save(currentUser);
     }
 
@@ -71,6 +77,13 @@ public class MeditationService {
 
     public void deleteMeditationGoal(long id)
     {
+        List<Activity> act = activityRepository.findByGoal("Meditation", currentUser.getMeditationGoal(),
+                Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
+        for(int i = 0; i<act.size(); i++)
+        {
+            activityRepository.delete(act.get(i));
+
+        }
         currentUser.setMeditationGoal(null);
         userRepository.save(currentUser);
         meditationRepository.deleteById(id);

@@ -1,7 +1,9 @@
 package onlab.MyFitnessApp.service.goalservice;
 
+import onlab.MyFitnessApp.dao.ActivityRepository;
 import onlab.MyFitnessApp.dao.UserRepository;
 import onlab.MyFitnessApp.dao.goaltypes.NatureRepository;
+import onlab.MyFitnessApp.entity.Activity;
 import onlab.MyFitnessApp.entity.goaltypes.NatureGoal;
 import onlab.MyFitnessApp.entity.goaltypes.WorkoutGoal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import static onlab.MyFitnessApp.service.MyUserDetailsService.currentUser;
 
@@ -23,8 +26,12 @@ public class NatureService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ActivityRepository activityRepository;
+
     public void addNatureGoal(NatureGoal natureGoal)
     {
+
        int year = Calendar.getInstance().get(Calendar.YEAR);
         int week = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
         String currweek = "" + year + week;
@@ -34,7 +41,8 @@ public class NatureService {
         natureGoal.setHowManyLeft(natureGoal.getFrequency());
         natureGoal.setSucceeded(false);
         natureGoal.setPercentage(0);
-        currentUser.setNatureGoal(natureRepository.save(natureGoal));
+        natureRepository.save(natureGoal);
+        currentUser.setNatureGoal(natureGoal);
         userRepository.save(currentUser);
     }
 
@@ -70,6 +78,13 @@ public class NatureService {
 
     public void deleteNatureGoal(long id)
     {
+        List<Activity> act = activityRepository.findByGoal("Nature", currentUser.getNatureGoal(),
+                Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
+        for(int i = 0; i<act.size(); i++)
+        {
+            activityRepository.delete(act.get(i));
+
+        }
         currentUser.setNatureGoal(null);
         userRepository.save(currentUser);
         natureRepository.deleteById(id);

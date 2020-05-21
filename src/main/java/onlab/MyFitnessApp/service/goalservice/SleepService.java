@@ -41,7 +41,8 @@ public class SleepService {
         sleepGoal.setSucceeded(false);
         sleepGoal.setPercentage(0);
         sleepGoal.setDaycount(0);
-        currentUser.setSleepGoal(sleepRepository.save(sleepGoal));
+        sleepRepository.save(sleepGoal);
+        currentUser.setSleepGoal(sleepGoal);
         userRepository.save(currentUser);
     }
 
@@ -82,7 +83,8 @@ public class SleepService {
 
     public void deleteSleepGoal(long id)
     {
-        List<Activity> act = activityRepository.findByGoal("Sleep", currentUser.getSleepGoal());
+        List<Activity> act = activityRepository.findByGoal("Sleep", currentUser.getSleepGoal(),
+                Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
         for(int i = 0; i<act.size(); i++)
         {
             activityRepository.delete(act.get(i));

@@ -8,6 +8,7 @@ import onlab.MyFitnessApp.entity.User;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public class VegGoal extends Goal
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
     @ElementCollection(fetch = FetchType.EAGER)
-    public Set<Integer> achievedOnDays;
+    public Set<Integer> achievedOnDays = new HashSet<>();
     public Integer daycount;
 
 

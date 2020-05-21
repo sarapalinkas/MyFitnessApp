@@ -50,27 +50,27 @@ public class ActivityService {
     {
         if (goaltype.equals("Workout"))
         {
-            return activityRepository.findByGoal(goaltype, currentUser.getWorkoutGoal());
+            return activityRepository.findByGoal(goaltype, currentUser.getWorkoutGoal(), Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
         }
         if (goaltype.equals("Sleep"))
         {
-            return activityRepository.findByGoal(goaltype, currentUser.getSleepGoal());
+            return activityRepository.findByGoal(goaltype, currentUser.getSleepGoal(), Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
         }
         if (goaltype.equals("Meditation"))
         {
-            return activityRepository.findByGoal(goaltype, currentUser.getMeditationGoal());
+            return activityRepository.findByGoal(goaltype, currentUser.getMeditationGoal(), Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
         }
         if (goaltype.equals("Nature"))
         {
-            return activityRepository.findByGoal(goaltype, currentUser.getNatureGoal());
+            return activityRepository.findByGoal(goaltype, currentUser.getNatureGoal(), Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
         }
         if (goaltype.equals("Fruit"))
         {
-            return activityRepository.findByGoal(goaltype, currentUser.getFruitGoal());
+            return activityRepository.findByGoal(goaltype, currentUser.getFruitGoal(), Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
         }
         if (goaltype.equals("Vegetable"))
         {
-            return activityRepository.findByGoal(goaltype, currentUser.getVegGoal());
+            return activityRepository.findByGoal(goaltype, currentUser.getVegGoal(), Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
         }
         return null;
     }
@@ -146,21 +146,40 @@ public class ActivityService {
         if(activity.getGoalType().equals("Workout"))
         {
             WorkoutGoal workoutGoal = currentUser.getWorkoutGoal();
-            workoutGoal.getActivities().remove(id);
+            for(int i = 0; i<workoutGoal.getActivities().size(); i++)
+            {
+                if(id == workoutGoal.getActivities().get(i).getId())
+                {
+                    workoutGoal.getActivities().remove(workoutGoal.getActivities().get(i));
+                }
+            }
+            activityRepository.deleteById(id);
             workoutService.updateWorkoutGoal(workoutGoal);
         }
         if(activity.getGoalType().equals("Sleep"))
         {
             SleepGoal sleepGoal = currentUser.getSleepGoal();
-            sleepGoal.getActivities().remove(id);
-            sleepGoal.getAchievedOnDays().remove(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
-            sleepGoal.setDaycount(sleepGoal.getDaycount() -1);
+            for(int i = 0; i<sleepGoal.getActivities().size(); i++)
+            {
+                if(id == sleepGoal.getActivities().get(i).getId())
+                {
+                    sleepGoal.getActivities().remove(sleepGoal.getActivities().get(i));
+                }
+            }
+            activityRepository.deleteById(id);
             sleepService.updateSleepGoal(sleepGoal);
         }
         if(activity.getGoalType().equals("Meditation"))
         {
             MeditationGoal meditationGoal = currentUser.getMeditationGoal();
-            meditationGoal.getActivities().remove(id);
+            for(int i = 0; i<meditationGoal.getActivities().size(); i++)
+            {
+                if(id == meditationGoal.getActivities().get(i).getId())
+                {
+                    meditationGoal.getActivities().remove(meditationGoal.getActivities().get(i));
+                }
+            }
+            activityRepository.deleteById(id);
             meditationService.updateMeditationGoal(meditationGoal);
         }
         if(activity.getGoalType().equals("Nature"))
@@ -173,25 +192,33 @@ public class ActivityService {
                     natureGoal.getActivities().remove(natureGoal.getActivities().get(i));
                 }
             }
-                    //  natureGoal.getActivities().remove(activity);
-          //  natureGoal.getActivities().remove(Math.toIntExact(id));
             activityRepository.deleteById(id);
             natureService.updateNatureGoal(natureGoal);
         }
         if(activity.getGoalType().equals("Fruit"))
         {
             FruitGoal fruitGoal = currentUser.getFruitGoal();
-            fruitGoal.getActivities().remove(id);
-            fruitGoal.getAchievedOnDays().remove(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
-            fruitGoal.setDaycount(fruitGoal.getDaycount() -1);
+            for(int i = 0; i<fruitGoal.getActivities().size(); i++)
+            {
+                if(id == fruitGoal.getActivities().get(i).getId())
+                {
+                    fruitGoal.getActivities().remove(fruitGoal.getActivities().get(i));
+                }
+            }
+            activityRepository.deleteById(id);
             fruitService.updateFruitGoal(fruitGoal);
         }
         if(activity.getGoalType().equals("Vegetable"))
         {
             VegGoal vegGoal = currentUser.getVegGoal();
-            vegGoal.getActivities().remove(id);
-            vegGoal.getAchievedOnDays().remove(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
-            vegGoal.setDaycount(vegGoal.getDaycount() -1);
+            for(int i = 0; i<vegGoal.getActivities().size(); i++)
+            {
+                if(id == vegGoal.getActivities().get(i).getId())
+                {
+                    vegGoal.getActivities().remove(vegGoal.getActivities().get(i));
+                }
+            }
+            activityRepository.deleteById(id);
             vegService.updateVegGoal(vegGoal);
         }
         activityRepository.deleteById(id);

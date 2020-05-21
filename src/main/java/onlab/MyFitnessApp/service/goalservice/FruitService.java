@@ -39,7 +39,8 @@ public class FruitService {
         fruitGoal.setSucceeded(false);
         fruitGoal.setPercentage(0);
         fruitGoal.setDaycount(0);
-        currentUser.setFruitGoal(fruitRepository.save(fruitGoal));
+        fruitRepository.save(fruitGoal);
+        currentUser.setFruitGoal(fruitGoal);
         userRepository.save(currentUser);
     }
 
@@ -80,7 +81,8 @@ public class FruitService {
 
     public void deleteFruitGoal(long id)
     {
-        List<Activity> act = activityRepository.findByGoal("Fruit", currentUser.getFruitGoal());
+        List<Activity> act = activityRepository.findByGoal("Fruit", currentUser.getFruitGoal(),
+                Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
         for(int i = 0; i<act.size(); i++)
         {
             activityRepository.delete(act.get(i));
